@@ -112,9 +112,14 @@ static void * mbed_ualloc_internal(size_t bytes, UAllocTraits_t traits, void *ca
     return ptr;
 }
 
-void *mbed_ualloc(size_t bytes, UAllocTraits_t traits)
+void *mbed_ualloc(size_t bytes, UAllocTraits_t traits, void *cb_caller)
 {
-    void *caller = (void*)caller_addr();
+	void *caller;
+	if (cb_caller == NULL) {
+		caller = (void*)caller_addr();
+	} else {
+		caller = cb_caller;
+	}
     void *p = mbed_ualloc_internal(bytes, traits, caller);
     if (!prevent_tracing) {
         prevent_tracing = 1;
@@ -128,7 +133,7 @@ static void * mbed_urealloc_internal(void * ptr, size_t bytes, UAllocTraits_t tr
 {
     void *newptr = NULL;
     if (ptr == NULL) {
-        return mbed_ualloc(bytes, traits);
+        return mbed_ualloc(bytes, traits, caller);
     }
     if(traits.flags & ~UALLOC_TRAITS_BITMASK) {
         // Traits not supported in urealloc yet
@@ -149,9 +154,14 @@ static void * mbed_urealloc_internal(void * ptr, size_t bytes, UAllocTraits_t tr
     return newptr;
 }
 
-void * mbed_urealloc(void * ptr, size_t bytes, UAllocTraits_t traits)
+void * mbed_urealloc(void * ptr, size_t bytes, UAllocTraits_t traits, void *cb_caller)
 {
-    void *caller = (void*)caller_addr();
+	void *caller;
+	if (cb_caller == NULL) {
+		caller = (void*)caller_addr();
+	} else {
+		caller = cb_caller;
+	}
     void *p = mbed_urealloc_internal(ptr, bytes, traits, caller);
     if (!prevent_tracing) {
         prevent_tracing = 1;
@@ -172,9 +182,14 @@ static void mbed_ufree_internal(void * ptr, void *caller)
     }
 }
 
-void mbed_ufree(void *ptr)
+void mbed_ufree(void *ptr, void *cb_caller)
 {
-    void *caller = (void*)caller_addr();
+	void *caller;
+	if (cb_caller == NULL) {
+		caller = (void*)caller_addr();
+	} else {
+		caller = cb_caller;
+	}
     mbed_ufree_internal(ptr, caller);
     if (!prevent_tracing) {
         prevent_tracing = 1;

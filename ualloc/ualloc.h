@@ -62,7 +62,7 @@ typedef union UAllocTraits {
  * @param[in] traits the traits to apply to the allocated memory
  * @return a pointer to the allocated memory on success, or NULL on failure.
  */
-void * mbed_ualloc(size_t bytes, UAllocTraits_t);
+void * mbed_ualloc(size_t bytes, UAllocTraits_t, void *cb_caller);
 /**
  * Reallocate the supplied memory
  *
@@ -78,14 +78,14 @@ void * mbed_ualloc(size_t bytes, UAllocTraits_t);
  * @param[in] traits the traits to apply to the new region (NOTE: Currently unsupported, must be 0)
  * @return the reallocated pointer
  */
-void * mbed_urealloc(void * ptr, size_t bytes, UAllocTraits_t);
+void * mbed_urealloc(void * ptr, size_t bytes, UAllocTraits_t, void *cb_caller);
 /**
  * ufree is a passthrough to the underlying free implementation.
  * ufree calls dlfree.
  *
  * @param[in] the pointer to free
  */
-void mbed_ufree(void * ptr);
+void mbed_ufree(void * ptr, void *cb_caller);
 
 #ifdef __cplusplus
 }

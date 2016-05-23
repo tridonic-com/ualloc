@@ -39,21 +39,21 @@ void $Sub$$free(void * ptr) {
 void * __wrap__malloc_r(struct _reent *r, size_t size) {
     (void) r;
     UAllocTraits_t traits = {0};
-    return mbed_ualloc(size, traits);
+    return mbed_ualloc(size, traits, (void*)__builtin_extract_return_addr(__builtin_return_address(0)));
 }
 void * __wrap__calloc_r(struct _reent *r, size_t elements, size_t size) {
     (void) r;
     UAllocTraits_t traits = {UALLOC_TRAITS_ZERO_FILL};
-    return mbed_ualloc(elements*size, traits);
+    return mbed_ualloc(elements*size, traits, (void*)__builtin_extract_return_addr(__builtin_return_address(0)));
 }
 void * __wrap__realloc_r(struct _reent *r, void * ptr, size_t size) {
     (void)r;
     UAllocTraits_t traits = {0};
-    return mbed_urealloc(ptr, size, traits);
+    return mbed_urealloc(ptr, size, traits, (void*)__builtin_extract_return_addr(__builtin_return_address(0)));
 }
 void __wrap__free_r(struct _reent *r, void * ptr) {
     (void)r;
-    mbed_ufree(ptr);
+    mbed_ufree(ptr, (void*)__builtin_extract_return_addr(__builtin_return_address(0)));
 }
 void * __wrap__sbrk_r(struct _reent *r, ptrdiff_t size) {
     (void) r;
